@@ -1,0 +1,41 @@
+all:
+  hosts:
+    master01:
+      ansible_host: 192.168.2.45
+      ansible_user: acardogo
+      ansible_private_key_file: ~/.ssh/id_rsa
+      ip: 192.168.2.45
+    worker01:
+      ansible_host: 192.168.2.46
+      ansible_user: acardogo
+      ansible_private_key_file: ~/.ssh/id_rsa
+      ip: 192.168.2.46
+    worker02:
+      ansible_host: 192.168.2.47
+      ansible_user: acardogo
+      ansible_private_key_file: ~/.ssh/id_rsa
+      ip: 192.168.2.47
+    worker03:
+      ansible_host: 192.168.2.48
+      ansible_user: acardogo
+      ansible_private_key_file: ~/.ssh/id_rsa
+      ip: 192.168.2.48
+
+kube_control_plane:
+  hosts:
+    master01:
+
+kube_node:
+  hosts:
+    worker01:
+    worker02:
+    worker03:
+
+etcd:
+  hosts:
+    master01:
+
+k8s_cluster:
+  children:
+    kube_control_plane:
+    kube_node:

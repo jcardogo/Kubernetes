@@ -1,0 +1,5 @@
+cluster_name: homelab-k8s
+kube_version: 1.31.4
+unsafe_show_logs: true
+download.checksum: "1866b407213b6191627c0ce7be5a0d7c14a016823b3bbc2a6898c57be6c59917"
+
