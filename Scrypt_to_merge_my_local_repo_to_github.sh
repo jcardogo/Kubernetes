@@ -5,12 +5,25 @@ git commit Basic_Python_Syntax_introduction.py -m "third file commited from ubun
 git remote set-url origin https://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@github.com/jcardogo/DevOps
 
 ####HOw to clone a repo with Personal Access Token
+<<<<<<< HEAD
 git clone https://jcardogo:GITHUB_PAT@github.com/jcardogo/DevOps.git
 
 ###### GitHub lab
 git clone https://jcardogo:$GITHUB_PAT@github.com/jcardogo/it-cert-automation-practice.git # cloning the repo for lab
+=======
+git clone https://acardogo:$GIITHUB_PAT@github.com/jcardogo/DevOps.git
+
+###### GitHub lab
+git clone https://acardogo:$GIITHUB_PAT@github.com/jcardogo/it-cert-automation-practice.git # cloning the repo for lab
+
+>>>>>>> 39005b8c775591a0bdf48441c69086ae00430a8a
 git remote add upstream https://github.com/jcardogo/it-cert-automation-practice.git #to create an upstream on remote repo
 git branch improve-username-behavior
 git checkout improve-username-behavior
 cd ~/it-cert-automation-practice/Course3/Lab4
+<<<<<<< HEAD
 git push origin improve-username-behavior
+=======
+
+git push origin improve-username-behavior
+>>>>>>> 39005b8c775591a0bdf48441c69086ae00430a8a
