@@ -20,6 +20,7 @@
     *7) Universal Head End System (UHES) (Apache Tomcat): user interface with GPS location and  
     *8) Automated Commissioning Process (ACP): Docker swarm solution that send a secuence of messages to acomplish the commissioning process.
     *9) Graphana Dashboard tracking metwork performance on local servers (bottle neck on resources)
+    *10) Prometheus data capture 
 
 - Containerized DOCKER Kubernetes(cluster of 3 Centos7):
     * deploy a kubernetes cluster using Kubespray for each environment
