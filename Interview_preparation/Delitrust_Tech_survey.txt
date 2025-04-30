@@ -1,0 +1,49 @@
+They send a 11 minutes questionary whit 14 questions
+
+1) Use of terraform refresh command: 
+    - It reads the current state od your insfrastructure resources managed by terraform
+    - It updates your Terraform state file (terraform.tfstate) to reflect the current, real-world status of those resources.
+    - It does not make any changes to your actual insfrastructure. It only updates the state file.
+    - This is usefull for directing any "drift" -differences between your Terraform configuration and the actual state of your infrastructure (which might have been changed manually or by other processes)
+    
+    terraform apply -refresh-only  is the way to refresh terraform: This will refresh the state and then show you the differences between the refreshed state and your configuration, but wont' apply any changes to the state file. This is useful for seeing what refresh would do.
+
+    terraform plan -refresh-only: This will refresh the state and the show you the differences between the refreshed state and your configuration, but it wont apply any changes to the state file. THis is useful for seeing what refresh would do.
+
+
+2) Difference between Daemonset and Replica set: 
+    - Daemonset: Exactly one copy of a Pod runs on all (or a specified subnet) of the nodes in a kubernetes cluster.
+    - Replicaset: To maintain a stable set of a specified number of replica Pods
+
+3) Command to scale a 5 replicas on kubernetes:
+    - kubectl scale --replicas=5 <resource_type>/<resource_name>
+
+4) Pod in pending state in kubernetes:
+    -  Kubernetes Pod in a Pending state signifies that the Pod has been accepted by the Kubernetes system but has not yet been scheduled onto a specific Node. This can occur for various reasons. Here's a breakdown of the common causes and how to troubleshoot them:
+
+    Common Reasons for a Pod to be in a Pending State:
+
+    Insufficient Node Resources:
+
+        CPU or Memory: The most frequent reason is that no Node in the cluster has enough available CPU or memory resources to meet the Pod's requests. Kubernetes ensures that a Node has the requested resources before scheduling a Pod onto it.
+        How to Check: Use kubectl describe node to inspect the capacity and allocatable resources of your Nodes. Compare these values to the resource requests defined in your Pod's specification (spec.containers[].resources.requests).
+
+5) implications on runing repeatlely terraform apply on a AWS failing caused by networking issue
+    - Running terraform apply repeatedly on an AWS infrastructure where the initial failure is caused by a networking issue can have several implications, some of which can be negative and even compound the problem. Here's a breakdown of the potential consequences:
+        Resource Creation Attempts: Terraform will repeatedly try to create or modify the resources that failed due to the networking issue. This can lead to:
+
+        API Throttling: Excessive API calls to AWS services can trigger rate limiting, potentially further delaying the resolution and even causing new errors.
+        Inconsistent State: If some resources manage to get partially created or modified during one of the retries before failing again, your Terraform state can become inconsistent with the actual infrastructure. This can make future Terraform operations more complex and unpredictable.
+        Resource Leaks (Potentially): In some edge cases, repeated failures during resource creation might leave behind partially provisioned resources that are not fully managed by Terraform, leading to potential cost implications and security risks.
+
+6) docker-compose up --build command purpose
+    - The docker-compose up --build command serves a dual purpose in orchestrating multi-container Docker applications defined in your docker-compose.yml file:
+
+7) meaning of depens_on on docker-compose.yml file
+    - When you run docker-compose up, Docker Compose will attempt to start the services listed in the depends_on section of a particular service before starting that service itself. This ensures that services that rely on others are started only after their dependencies are (at least attempting to be) running.
+
+8) 502 error meaning
+    - Common causes of a 502 Bad Gateway error:
+        Upstream server is down or unavailable: The server that the main server is trying to communicate with might be offline due to maintenance, failure, or high traffic.
+        Network issues between servers: There might be network connectivity problems preventing the gateway server from reaching the upstream server or receiving a proper response.
+        Firewall issues: A firewall on either the gateway server or the upstream server might be incorrectly blocking communication.
