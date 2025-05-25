@@ -1,0 +1,109 @@
+pipeline {
+    agent {label "${params.AGENT_LABEL}"} // Define the agent to run the pipeline
+
+    parameters {
+        choice(name: 'AGENT_LABEL', choices: ['local', 'agent1', 'agent2', 'agent3', 'agent4'], description: 'Agent to run the pipeline') // Define the parameter array to choose the agent from
+        string(name: 'REPO_URL', defaultValue: 'github.com/jcardogo/AlejandroCardoso_website.git', description: 'Git repository URL') // URL of the Git repository
+        string(name: 'BRANCH', defaultValue: 'master', description: 'Branch to checkout') // Branch to checkout
+    }
+    
+    stages {
+        stage('Wipe Workspace') {
+            steps {
+                echo '***** Starting wipe up working directory *****'
+                script {
+                    def targetDir = 'sandbox1' // Define the directory name
+
+                    // Check if the directory already exists
+                    if (new File(targetDir).exists()) {
+                        echo "Directory '${targetDir}' already exists."
+                    } else {
+                        // Attempt to create the directory
+                        boolean created = new File(targetDir).mkdirs()
+                        if (created) {
+                            echo "Successfully created directory '${targetDir}'."
+                            // Only wipe /tmp/sandbox if the directory creation was successful
+                            sh 'rm -rf /tmp/sandbox/*'
+                            echo "Successfully wiped out all contents of /tmp/sandbox."
+                        } else {
+                            error "Failed to create directory '${targetDir}'."
+                        }
+                    }
+                echo '-------wipe up done-------'
+            }
+        }
+        
+        stage('Checkout') {
+            steps {
+                git 'https://your-repo-url.git'
+            }
+        }
+
+        stage('Static Analysis') {
+            steps {
+                script {
+                    def sonarQubeResult = sh(script: 'mvn sonar:sonar -Dsonar.projectKey=your-project -Dsonar.host.url=your-sonarqube-url -Dsonar.login=your-token', returnStatus: true)
+                    if (sonarQubeResult != 0) {
+                        error "SonarQube analysis failed. Please check the SonarQube dashboard."
+                    }
+                    // Optionally, wait for SonarQube quality gate to pass
+                    // waitForQualityGate abortOnError: true, credentialsId: 'your-sonarqube-credentials'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Unit Tests') {
+            steps {
+                sh 'mvn test'
+                script {
+                    // Example: Check for code coverage (requires JaCoCo plugin)
+                    def coverageReport = sh(script: 'mvn jacoco:report', returnStdout: true).trim()
+                    def coveragePercentage = (coverageReport =~ /Overall Coverage: ([0-9.]+)%/)[0][1].toBigDecimal()
+                    if (coveragePercentage < 80) {
+                        error "Unit test coverage below the required 80%: ${coveragePercentage}%"
+                    }
+                }
+            }
+        }
+
+        stage('Integration Tests') {
+            steps {
+                sh 'mvn failsafe:integration-test failsafe:verify'
+            }
+        }
+
+        stage('Containerize') {
+            steps {
+                sh 'docker build -t your-image:latest .'
+                // Add image vulnerability scanning here
+            }
+        }
+
+        stage('Deploy to Dev') {
+            steps {
+                sh 'kubectl apply -f deployment-dev.yaml'
+            }
+        }
+
+        stage('Manual Approval for Production') {
+            steps {
+                input message: 'Approve deployment to production?', submitterParameter: 'APPROVER'
+            }
+        }
+
+        stage('Deploy to Production') {
+            when {
+                expression { APPROVER != null }
+            }
+            steps {
+                sh 'kubectl apply -f deployment-prod.yaml'
+            }
+        }
+    }
+}
