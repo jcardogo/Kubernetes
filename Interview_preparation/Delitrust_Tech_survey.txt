@@ -1,7 +1,7 @@
 They send a 11 minutes questionary whit 14 questions
 
 1) Use of terraform refresh command: 
-    - It reads the current state od your insfrastructure resources managed by terraform
+    - It reads the current state of your insfrastructure resources managed by terraform
     - It updates your Terraform state file (terraform.tfstate) to reflect the current, real-world status of those resources.
     - It does not make any changes to your actual insfrastructure. It only updates the state file.
     - This is usefull for directing any "drift" -differences between your Terraform configuration and the actual state of your infrastructure (which might have been changed manually or by other processes)
